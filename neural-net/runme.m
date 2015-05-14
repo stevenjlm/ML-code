@@ -13,48 +13,30 @@
 
 clear; clc;
 
-% Parameters
+% Script parameters
 nLayers=3;
 nNeurons=[2;8;1];
-backPropSteps=30;
-
-% Initialization ------------------------
-
+nEpochs=30;
+nDataPts=10; % MUST BE DIVISIBLE BY 2
 if ~isequal([nLayers,1],size(nNeurons))
     error('nNeurons should be an nLayers by 1 column vector');
 end
 
-% Weights
-W=cell(1,nLayers-1);
-for iLayer=1:(nLayers-1)
-    W{iLayer}=rand(nNeurons(iLayer+1),nNeurons(iLayer));
-end
+% Initialization ------------------------
 
-% Biases
-b=cell(1,nLayers-1);
-for iLayer=1:(nLayers-1)
-    b{iLayer}=rand(nNeurons(iLayer+1),1);
-end
+[W,b,z,a,delW,delb]=InitParams(nLayers, nNeurons);
 
-% z
-z=cell(1,nLayers);
-for iLayer=1:(nLayers)
-    b{iLayer}=zeros(nNeurons(iLayer),1);
-end
+% Load Data -----------------------------
+Data=LoadData(nDataPts);
 
-% a
-a=cell(1,nLayers);
-for iLayer=1:(nLayers)
-    a{iLayer}=zeros(nNeurons(iLayer),1);
-end
+% Shuffle Data
+ordering = randperm(nDataPts);
+Data=Data(ordering,:);
 
-% Gradients
-delW=cell(1,nLayers-1);
-for iLayer=1:(nLayers-1)
-    W{iLayer}=zeros(nNeurons(iLayer+1),nNeurons(iLayer));
+% Learn ---------------------------------
+for iEpoch=1:nEpochs
+    for iDataPt=1:nDataPts
+        [z,a]= ForwardProp (nLayers,W,b,z,a,Data(iDataPt,1:2));
+        [z,a]= BackProp (nLayers,W,b,z,a,Data(iDataPt,1:2));
+    end
 end
-delb=cell(1,nLayers-1);
-for iLayer=1:(nLayers-1)
-    b{iLayer}=zeros(nNeurons(iLayer+1),1);
-end
-
