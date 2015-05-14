@@ -34,7 +34,7 @@ end
 % z
 z=cell(1,nLayers);
 for iLayer=1:(nLayers)
-    b{iLayer}=zeros(nNeurons(iLayer),1);
+    z{iLayer}=zeros(nNeurons(iLayer),1);
 end
 
 % a

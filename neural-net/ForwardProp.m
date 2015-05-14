@@ -20,7 +20,7 @@ a{1}=DataPt';
 % Progress through propagation, layer by layer
 for iLayer=1:(nLayers-1)
     z{iLayer+1}=W{iLayer}*a{iLayer}+b{iLayer};
-    a{iLayer+1}=sigmoid(iLayer+1);
+    a{iLayer+1}=sigmoid(z{iLayer+1});
 end
 
 end

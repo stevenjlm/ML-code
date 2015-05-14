@@ -16,10 +16,11 @@ clear; clc;
 % Script parameters
 nLayers=3;
 nNeurons=[2;8;1];
-nEpochs=30;
-nDataPts=10; % must be divisible by 2
-alpha=.01;
-lambda=1;
+nEpochs=1;
+nDataPts=200; % must be divisible by 2
+alpha=.001;
+lambda=.1;
+checkGradient=1;
 
 % Initialization ------------------------
 
@@ -43,13 +44,22 @@ for iEpoch=1:nEpochs
         [delW,delb]= BackProp (nLayers,W,a,delW,delb,TrainData(iDataPt,3));
     end
     
-    [W,b]= Update (W,b,delW,delb,nDataPts/2,alpha,lambda);
+    if checkGradient==1
+        CheckGrad(nLayers,nNeurons,W,b,z,a,delW,delb,TrainData,lambda);
+    end
+    
+    [W,b]= Update (nLayers,W,b,delW,delb,nDataPts/2,alpha,lambda);
+    J= ObjFn (nLayers,W,b,z,a,TrainData,lambda);
+    %disp(J);
 end
 
 TotalError=0;
 % Test
 for iDataPt=1:nDataPts/2
-    delta=ForwardProp(nLayers,W,b,z,a,...
+    delta=ForwardPropTest(nLayers,W,b,z,a,...
         TestData(iDataPt,1:2),TestData(iDataPt,3));
     TotalError=TotalError+delta;
 end
+
+disp('Error percentage rate is:');
+disp(TotalError/(nDataPts/2)*100);

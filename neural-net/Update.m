@@ -13,7 +13,7 @@
 %     Out: delW     -> nLayer-1 entry cell of weight gradient matrices
 %          delb     -> nLayer-1 entry cell of scalar bias gradient terms
 
-function [W,b]= Update (W,b,delW,delb,nDataPts,alpha,lambda)
+function [W,b]= Update (nLayers,W,b,delW,delb,nDataPts,alpha,lambda)
     % Update layer by layer
     for iLayer=1:(nLayers-1)
         W{iLayer}=W{iLayer}-alpha*(1/nDataPts*delW{iLayer}...
