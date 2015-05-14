@@ -46,11 +46,11 @@ end
 % Gradients
 delW=cell(1,nLayers-1);
 for iLayer=1:(nLayers-1)
-    W{iLayer}=zeros(nNeurons(iLayer+1),nNeurons(iLayer));
+    delW{iLayer}=zeros(nNeurons(iLayer+1),nNeurons(iLayer));
 end
 delb=cell(1,nLayers-1);
 for iLayer=1:(nLayers-1)
-    b{iLayer}=zeros(nNeurons(iLayer+1),1);
+    delb{iLayer}=zeros(nNeurons(iLayer+1),1);
 end
 
 end

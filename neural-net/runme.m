@@ -17,10 +17,9 @@ clear; clc;
 nLayers=3;
 nNeurons=[2;8;1];
 nEpochs=30;
-nDataPts=10; % MUST BE DIVISIBLE BY 2
-if ~isequal([nLayers,1],size(nNeurons))
-    error('nNeurons should be an nLayers by 1 column vector');
-end
+nDataPts=10; % must be divisible by 2
+alpha=.01;
+lambda=1;
 
 % Initialization ------------------------
 
@@ -33,10 +32,24 @@ Data=LoadData(nDataPts);
 ordering = randperm(nDataPts);
 Data=Data(ordering,:);
 
+% Seperate training from Test data
+TrainData=Data(1:nDataPts/2,:);
+TestData=Data(nDataPts/2+1:end,:);
+
 % Learn ---------------------------------
 for iEpoch=1:nEpochs
-    for iDataPt=1:nDataPts
-        [z,a]= ForwardProp (nLayers,W,b,z,a,Data(iDataPt,1:2));
-        [z,a]= BackProp (nLayers,W,b,z,a,Data(iDataPt,1:2));
+    for iDataPt=1:nDataPts/2
+        [z,a]= ForwardProp (nLayers,W,b,z,a,TrainData(iDataPt,1:2));
+        [delW,delb]= BackProp (nLayers,W,a,delW,delb,TrainData(iDataPt,3));
     end
+    
+    [W,b]= Update (W,b,delW,delb,nDataPts/2,alpha,lambda);
+end
+
+TotalError=0;
+% Test
+for iDataPt=1:nDataPts/2
+    delta=ForwardProp(nLayers,W,b,z,a,...
+        TestData(iDataPt,1:2),TestData(iDataPt,3));
+    TotalError=TotalError+delta;
 end
