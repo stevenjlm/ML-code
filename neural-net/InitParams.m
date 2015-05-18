@@ -22,13 +22,13 @@ end
 % Weights
 W=cell(1,nLayers-1);
 for iLayer=1:(nLayers-1)
-    W{iLayer}=rand(nNeurons(iLayer+1),nNeurons(iLayer));
+    W{iLayer}=rand(nNeurons(iLayer+1),nNeurons(iLayer))-.5;
 end
 
 % Biases
 b=cell(1,nLayers-1);
 for iLayer=1:(nLayers-1)
-    b{iLayer}=rand(nNeurons(iLayer+1),1);
+    b{iLayer}=rand(nNeurons(iLayer+1),1)-.5;
 end
 
 % z

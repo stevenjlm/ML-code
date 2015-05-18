@@ -16,7 +16,7 @@ clear; clc;
 nDataPts=400; % must be divisible by 2
 nTraining=150; % number of training pts per class
 nTest=50;
-nClassifiers=9;
+nClassifiers=5;
 
 % Initialize learning -------------------
 h=cell(nClassifiers,3); % Stores all the information for classifiers
@@ -43,8 +43,8 @@ for iClassifier=1:nClassifiers
     alphat=1/2*log((1-Et)/Et);
     yt=[TrainData0(:,3);TrainData1(:,3)];
     Ht=ht(h,[TrainData0(:,1:2);TrainData1(:,1:2)],iClassifier);
-    Zt=sum(dataWeights.*exp(-alphat*yt.*Ht));
-    dataWeights=1/Zt*dataWeights.*exp(-alphat*yt.*Ht);
+    Zt=sum(dataWeights.*exp(-alphat*yt.*sign(Ht)));
+    dataWeights=1/Zt*dataWeights.*exp(-alphat*yt.*sign(Ht));
 end
 
 % Plot data -----------------------------
@@ -71,6 +71,8 @@ Data=[TrainData0(:,1:2);TrainData1(:,1:2)];
 Hx = hx(h,Data,hWeights,nClassifiers);
 neg=bsxfun(@times,Data,(Hx<0));
 pos=bsxfun(@times,Data,(Hx>0));
+pos(all(pos==0,2),:)=[];
+neg(all(neg==0,2),:)=[];
 
 plot(neg(:,1),neg(:,2),'xb');
 hold on

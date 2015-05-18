@@ -5,11 +5,20 @@
 
 
 function Ht = ht(h,Data,iClassifier)
+% if ~(h{iClassifier,1}==0)
+%     Ht=bsxfun(@plus,Data(:,1),-h{iClassifier,1});
+%     Ht=h{iClassifier,3}*sign(Ht);
+% else
+%     Ht=bsxfun(@plus,Data(:,2),-h{iClassifier,2});
+%     Ht=h{iClassifier,3}*sign(Ht);
+% end
 if ~(h{iClassifier,1}==0)
     Ht=bsxfun(@plus,Data(:,1),-h{iClassifier,1});
-    Ht=h{iClassifier,3}*sign(Ht);
+    %Ht=h{iClassifier,3}*tanhyp(Ht);
+	Ht=h{iClassifier,3}*sign(Ht);
 else
     Ht=bsxfun(@plus,Data(:,2),-h{iClassifier,2});
-    Ht=h{iClassifier,3}*sign(Ht);
+    %Ht=h{iClassifier,3}*tanhyp(Ht);
+	Ht=h{iClassifier,3}*sign(Ht);
 end
 end

@@ -14,13 +14,13 @@
 clear; clc;
 
 % Script parameters
-nLayers=3;
-nNeurons=[2;8;1];
-nEpochs=1;
-nDataPts=200; % must be divisible by 2
-alpha=.001;
-lambda=.1;
-checkGradient=1;
+nLayers=4;
+nNeurons=[2;8;6;1];
+nEpochs=2000;
+nDataPts=400; % must be divisible by 2
+alpha=.1;
+lambda=0.1;
+checkGradient=0;
 
 % Initialization ------------------------
 
@@ -54,12 +54,22 @@ for iEpoch=1:nEpochs
 end
 
 TotalError=0;
-% Test
+% Test and Training error ---------------
 for iDataPt=1:nDataPts/2
     delta=ForwardPropTest(nLayers,W,b,z,a,...
-        TestData(iDataPt,1:2),TestData(iDataPt,3));
+        TrainData(iDataPt,1:2),TrainData(iDataPt,3));
     TotalError=TotalError+delta;
 end
 
-disp('Error percentage rate is:');
+disp('Error percentage rate for Training Data is:');
+disp(TotalError/(nDataPts/2)*100);
+
+TotalError=0;
+for iDataPt=1:nDataPts/2
+    delta=ForwardPropTest(nLayers,W,b,z,a,...
+        TestData(iDataPt,1:2),TestData(iDataPt,3));
+	TotalError=TotalError+delta;
+end
+
+disp('Error percentage rate for Test Data is:');
 disp(TotalError/(nDataPts/2)*100);

@@ -16,7 +16,7 @@ clear; clc;
 nDataPts=6; % must be divisible by 2
 nTraining=2; % number of training pts per class
 nTest=1;
-nClassifiers=2;
+nClassifiers=10;
 
 % Initialize learning -------------------
 h=cell(nClassifiers,3); % Stores all the information for classifiers
@@ -37,14 +37,14 @@ for iClassifier=1:nClassifiers
     h = Classify(h,TrainData0,TrainData1,dataWeights,iClassifier);
     Et = CompError(h,TrainData0,TrainData1,dataWeights,iClassifier);
     disp(Et);
-    hWeights(iClassifier)=1/2*log((1-Et)/Et);
+    hWeights(iClassifier)=1/2*log((1-Et)/(Et));
     
     % Update Data weights
-    alphat=1/2*log((1-Et)/Et);
+    alphat=1/2*log((1-Et)/(Et));
     yt=[TrainData0(:,3);TrainData1(:,3)];
     Ht=ht(h,[TrainData0(:,1:2);TrainData1(:,1:2)],iClassifier);
-    Zt=sum(dataWeights.*exp(-alphat*yt.*Ht));
-    dataWeights=1/Zt*dataWeights.*exp(-alphat*yt.*Ht);
+    Zt=sum(dataWeights.*exp(-alphat*yt.*sign(Ht)));
+    dataWeights=1/Zt*dataWeights.*exp(-alphat*yt.*sign(Ht));
 end
 
 % Plot data -----------------------------
@@ -70,6 +70,8 @@ figure;
 Hx = hx(h,Data,hWeights,nClassifiers);
 neg=bsxfun(@times,Data,(Hx<0));
 pos=bsxfun(@times,Data,(Hx>0));
+pos(all(pos==0,2),:)=[];
+neg(all(neg==0,2),:)=[];
 
 plot(neg(:,1),neg(:,2),'xb');
 hold on

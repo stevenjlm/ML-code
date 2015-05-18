@@ -39,6 +39,9 @@ for iLayer=(nLayers-1):-1:1
     
     % Partial Derivatives
     partialW{iLayer}=delta{iLayer+1}*a{iLayer}';
+% 	disp('error for');
+% 	disp(iLayer);
+% 	disp(partialW{iLayer});
     partialb{iLayer}=delta{iLayer+1};
     
     % Cummulative change

@@ -23,6 +23,5 @@ for iLayer=1:(nLayers-1)
     z{iLayer+1}=W{iLayer}*a{iLayer}+b{iLayer};
     a{iLayer+1}=sigmoid(z{iLayer+1});
 end
-
 delta=(class~=round(a{nLayers}));
 end
