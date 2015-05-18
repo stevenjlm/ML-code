@@ -17,6 +17,6 @@ load('data/hw3_class0.mat');
 load('data/hw3_class1.mat');
 
 Data=[samples_class0(1:nDataPts/2,:),zeros(nDataPts/2,1)];
-Data=[Data;[samples_class0(1:nDataPts/2,:),ones(nDataPts/2,1)]];
+Data=[Data;[samples_class1(1:nDataPts/2,:),ones(nDataPts/2,1)]];
 
 end
