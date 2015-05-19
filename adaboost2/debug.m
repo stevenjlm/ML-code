@@ -1,7 +1,7 @@
 % 
 %     ECE 594E HW 4
 %           Adaptive Boosting
-%     Main running script
+%     DEBUGGER
 %     Parameters: nDataPts -> number data points 50 % use for training
 %                          -> rest is for testing
 %             nClassifiers -> number of weak classifiers to combine
@@ -13,10 +13,10 @@
 clear; clc;
 
 % Script parameters ---------------------
-nDataPts=400; % must be divisible by 2
-nTraining=150; % number of training pts per class
-nTest=50;
-nClassifiers=30;
+nDataPts=6; % must be divisible by 2
+nTraining=2; % number of training pts per class
+nTest=1;
+nClassifiers=10;
 
 % Initialize learning -------------------
 h=cell(nClassifiers,3); % Stores all the information for classifiers
@@ -24,12 +24,12 @@ dataWeights=ones(nTraining*2,1)/(nTraining*2);
 hWeights=zeros(nClassifiers,1);
 
 % Load Data -----------------------------
-Data=LoadData(nDataPts,1);
-TrainData0=Data(1:nTraining,:);
-TrainData1=Data(nDataPts/2+1:(nDataPts/2+nTraining),:);
+TrainData1=[-1.2,-0.9,1;1.5,1.2,1];
+TrainData0=[-1.3,1.5,-1;-1.1,.7,-1];
+Data=[TrainData0;TrainData1];
 
-TestData0=Data(nTraining+1:nDataPts/2,:);
-TestData1=Data(nDataPts/2+nTraining+1:end,:);
+TestData1=2*[-1,-1,1/2];
+TestData0=2*[-1,1,-1/2];
 
 % Learn ---------------------------------
 
@@ -37,14 +37,14 @@ for iClassifier=1:nClassifiers
     h = Classify(h,TrainData0,TrainData1,dataWeights,iClassifier);
     Et = CompError(h,TrainData0,TrainData1,dataWeights,iClassifier);
     disp(Et);
-    hWeights(iClassifier)=1/2*log((1-Et)/Et);
+    hWeights(iClassifier)=1/2*log((1-Et)/(Et));
     
     % Update Data weights
-    alphat=1/2*log((1-Et)/Et);
+    alphat=1/2*log((1-Et)/(Et));
     yt=[TrainData0(:,3);TrainData1(:,3)];
     Ht=ht(h,[TrainData0(:,1:2);TrainData1(:,1:2)],iClassifier);
-    Zt=sum(dataWeights.*exp(-alphat*yt.*Ht));
-    dataWeights=1/Zt*dataWeights.*exp(-alphat*yt.*Ht);
+    Zt=sum(dataWeights.*exp(-alphat*yt.*sign(Ht)));
+    dataWeights=1/Zt*dataWeights.*exp(-alphat*yt.*sign(Ht));
 end
 
 % Plot data -----------------------------
@@ -67,7 +67,6 @@ hold off
 
 figure;
 % Plot Classifications
-Data=[TrainData0(:,1:2);TrainData1(:,1:2)];
 Hx = hx(h,Data,hWeights,nClassifiers);
 neg=bsxfun(@times,Data,(Hx<0));
 pos=bsxfun(@times,Data,(Hx>0));
@@ -89,36 +88,3 @@ for iClassifier=1:nClassifiers
     end
 end
 hold off
-
-% Training and test data ----------------
-DatatoPlot=[TrainData0;TrainData1];
-
-TotalError=0;
-% Plot data points
-hold on;
-for iDataPt=1:2*nTraining
-	decision=sign(hx(h,...
-			DatatoPlot(iDataPt,1:2),hWeights,nClassifiers));
-	if ~(decision==DatatoPlot(iDataPt,3))
-		TotalError=TotalError+1;
-	end
-end
-disp('Error on training data is (in percentage):');
-disp(TotalError/(2*nTraining)*100);
-
-
-
-DatatoPlot=[TestData0;TestData1];
-
-TotalError=0;
-% Plot data points
-hold on;
-for iDataPt=1:2*nTest
-	decision=sign(hx(h,...
-			DatatoPlot(iDataPt,1:2),hWeights,nClassifiers));
-	if ~(decision==DatatoPlot(iDataPt,3))
-		TotalError=TotalError+1;
-	end
-end
-disp('Error on testing data is (in percentage):');
-disp(TotalError/(2*nTest)*100);
