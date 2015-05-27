@@ -7,12 +7,12 @@ function plot_sim (Sim)
 t=1:Sim.T;
 
 figure;
-plot(t,mean(Sim.xs,2),'-r');
+plot(t,mean(Sim.xs,2),'..r');
 titleForPlot=['x and y states for ', Sim.name];
 title(titleForPlot);
 
 hold on;
-plot(t,Sim.ys,'-b');
+plot(t,Sim.ys,'--k');
 hold off
 
 legend('x states','y measurements');

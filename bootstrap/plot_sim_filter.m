@@ -16,4 +16,11 @@ plot(t,mean(Filter.xbars,2),'-b');
 hold off
 legend('Ground Truth','Filter Estimate');
 xlabel('time');
+
+figure;
+MSE=bsxfun(@plus,Sim.xs,-Filter.xbars);
+MSE=mean(MSE.^2,2);
+plot(t,MSE,'-b');
+title('MSE for Boostrap');
+xlabel('time');
 end

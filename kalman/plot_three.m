@@ -12,8 +12,8 @@ titleForPlot='GT, Kalman, and Bootstrap';
 title(titleForPlot);
 
 hold on;
-plot(t,Kal.xs,'-b');
-plot(t,mean(Boot.xbars,2),'-g');
+plot(t,Kal.xs,'-k');
+plot(t,mean(Boot.xbars,2),':b');
 hold off
 
 legend('GT','Kalman','Bootstrap');

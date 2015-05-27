@@ -6,6 +6,7 @@
 function w= weight ( Filter)
 t=Filter.t;
 y=Filter.ys(t);
-w=normpdf(y,1/20*Filter.xs(t,:).^2,Filter.sigmaWeight);
+% w=normpdf(y,1/20*Filter.xs(t,:).^2,sqrt(Filter.sigmaWeight));
+w=normpdf(y,1/20*Filter.xs(t,:).^2,sqrt(Filter.sigmaWeight));
 w=w/(sum(sum(w)));
 end

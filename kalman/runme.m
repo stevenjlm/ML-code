@@ -91,7 +91,7 @@ end
 % Parameters
 bPF.name = 'Bootstrap PF';
 bPF.useControl=1;
-bPF.N=100;
+bPF.N=5000;
 bPF.T=100;
 
 bPF.sigmaWeight=gtModel.sigmaEt; % Equation 5.15 Schon
@@ -129,42 +129,5 @@ bPF.xbars(t,:)=resample(bPF);
 if gtModel.plotPF==1
     plot_three(gtSim,kFil,bPF);
 end
-% 
-% % Backward Particle filter ----------------------
-% bPF.M=50;
-% 
-% % Initialize backwards trajectories
-% bPF.xjs=zeros(bPF.T,bPF.M);
-% bPF.xjs(bPF.T,:)=back_resample( bPF);
-% 
-% for t=(bPF.T-1):-1:1
-% 	% For each backwards trajectory, find the particle in x_{t-1}
-% 	% that best explains the particle x_{t}
-% 	for j=1:bPF.M
-% 		% \tilde{w}_{t|T}^{i,j} is represented here as a 1 by N
-% 		% matrix to improve computation
-% 		% These weights can be discarded as they would cost too
-% 		% much memory
-% 		bPF.t=t;
-% 		weightij_tT=bPF.ws(t,:).*bkf( gtModel, bPF);
-% 		%Normalize
-% 		weightij_tT=weightij_tT/(sum(sum(weightij_tT)));
-% 		
-% 		% Sample
-% 		xt=bPF.xs(bPF.t,:);
-% 		cumulativeDistribution=cumsum(weightij_tT);
-% 		randSamples=rand(1,1); % Column vector
-% 		indexMatrix=1:bPF.N;
-% 		gtFun=bsxfun(@gt,cumulativeDistribution,randSamples);
-% 		Samples=indexMatrix.*gtFun;
-% 		% Below is a trick to not need a for loop
-% 		Samples(Samples==0)=bPF.M+100;
-% 		Samples=min(Samples,[],2)';
-% 		bPF.xjs(bPF.t,j)=xt(Samples);
-% 	end
-% end
-% 
-% % Plot trajectory -------------------------------
-% trajectory=bPF.xjs(:,3);
-% t=1:bPF.T;
-% plot(t,trajectory,'-r');
+
+plot_mses(gtSim,kFil,bPF);

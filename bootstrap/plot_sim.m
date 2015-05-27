@@ -15,4 +15,7 @@ hold on;
 plot(t,Sim.ys,'-b');
 hold off
 
+xlabel('time')
+legend('x_{t}','y_{t}');
+
 end

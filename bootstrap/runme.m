@@ -9,7 +9,7 @@ clear;clc;
 
 % General parameters
 gtModel.plotGt=0;
-gtModel.plotPF=0;
+gtModel.plotPF=1;
 
 % X initialization paramters
 % Here x_{1} ~ N(0,1)
@@ -51,7 +51,7 @@ end
 % Parameters
 bPF.name = 'Bootstrap PF';
 bPF.N=100;
-bPF.T=100;
+bPF.T=gtSim.T;
 
 bPF.sigmaWeight=0.5; % Equation 5.15 Schon
 
@@ -83,7 +83,7 @@ if gtModel.plotPF==1
 end
 
 % Backward Particle filter ----------------------
-bPF.M=50;
+bPF.M=100;
 
 % Initialize backwards trajectories
 bPF.xjs=zeros(bPF.T,bPF.M);
@@ -116,7 +116,24 @@ for t=(bPF.T-1):-1:1
 	end
 end
 
-% Plot trajectory -------------------------------
-trajectory=bPF.xjs(:,3);
-t=1:bPF.T;
-plot(t,trajectory,'-r');
+% % Plot trajectory -------------------------------
+% t=1:bPF.T;
+% figure;
+% hold on;
+% plot(t,bPF.xjs(:,3),'-r');
+% plot(t,bPF.xjs(:,4),'-g');
+% plot(t,bPF.xjs(:,5),'-m');
+% plot(t,gtSim.xs,'--b');
+% hold off;
+% title('Backwards filter sample trajectories and groud truth');
+% legend('trajectory 1','trajectory 2','trajectory3','ground truth');
+% 
+% % 90th particle error ---------------------------
+% disp('MSE for forward trajectory');
+% MSE=bsxfun(@plus,gtSim.xs(90,1),-bPF.xbars(90,:));
+% MSE=mean(MSE.^2);
+% disp(MSE);
+% disp('MSE for backward trajectory');
+% MSE=bsxfun(@plus,gtSim.xs(90,1),-bPF.xjs(90,:));
+% MSE=mean(MSE.^2);
+% disp(MSE);
